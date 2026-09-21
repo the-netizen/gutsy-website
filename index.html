@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gutsy — Healthier Gut, One Plant at a Time</title>
+    <meta name="description" content="Gutsy helps you build a healthier gut microbiome by tracking plant diversity. Snap a meal, detect plants with AI, and hit 30 plants per week. Free on the App Store.">
+    <meta name="keywords" content="gut health, microbiome, plant diversity, 30 plants, food tracker, iOS app, AI food detection">
+    <meta property="og:title" content="Gutsy">
+    <meta property="og:description" content="Taking the guesswork out of gut health. Snap a meal, track your plants, grow your microbiome.">
+    <meta property="og:image" content="assets/call_to_action.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #D8727A;
+            --primary-dark: #c4616a;
+            --primary-light: #f2d0d3;
+            --primary-lighter: #fdf0f1;
+            --accent-green: #4CAF50;
+            --accent-orange: #F5A623;
+            --text-dark: #2D2D2D;
+            --text-medium: #555;
+            --text-light: #888;
+            --bg-white: #FFFFFF;
+            --bg-off: #FBF7F7;
+            --bg-pink: #FEF5F5;
+            --shadow-sm: 0 2px 8px rgba(216, 114, 122, 0.1);
+            --shadow-md: 0 4px 20px rgba(216, 114, 122, 0.15);
+            --shadow-lg: 0 8px 40px rgba(216, 114, 122, 0.2);
+            --radius: 16px;
+            --radius-lg: 24px;
+            --max-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            background: var(--bg-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Fredoka', 'DM Sans', sans-serif;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== NAV ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(216, 114, 122, 0.1);
+            transition: box-shadow 0.3s;
+        }
+
+        nav.scrolled {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .nav-logo img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-medium);
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            background: var(--primary);
+            color: #fff !important;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .nav-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .mobile-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text-dark);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 140px 0 80px;
+            background: linear-gradient(180deg, var(--bg-pink) 0%, var(--bg-white) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(216,114,122,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary-lighter);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .hero-badge::before {
+            content: '🌱';
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            line-height: 1.15;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero-tagline {
+            font-size: 1.15rem;
+            color: var(--text-medium);
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-medium);
+            margin-bottom: 36px;
+            max-width: 480px;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .app-store-btn {
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+
+        .app-store-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .app-store-btn img {
+            height: 52px;
+        }
+
+        .hero-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .hero-stat svg {
+            color: var(--accent-green);
+        }
+
+        .hero-image {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-image img {
+            max-width: 520px;
+            width: 100%;
+            border-radius: var(--radius-lg);
+            filter: drop-shadow(0 20px 60px rgba(216,114,122,0.2));
+        }
+
+        /* ===== SECTION SHARED ===== */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-medium);
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-header .section-subtitle {
+            margin: 0 auto;
+        }
+
+        /* ===== SCIENCE ===== */
+        .science {
+            background: var(--bg-white);
+        }
+
+        .science-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 32px;
+        }
+
+        .science-card {
+            background: var(--bg-pink);
+            border-radius: var(--radius);
+            padding: 36px 28px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .science-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .science-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+        }
+
+        .science-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .science-card p {
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        .science-source {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .science-source a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            background: var(--bg-off);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            counter-reset: step;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            line-height: 1.6;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        /* ===== FEATURES ===== */
+        .features {
+            background: var(--bg-white);
+        }
+
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .feature-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-row.reverse {
+            direction: rtl;
+        }
+
+        .feature-row.reverse > * {
+            direction: ltr;
+        }
+
+        .feature-img-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .feature-img-wrapper img {
+            max-width: 340px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-text .section-label {
+            margin-bottom: 8px;
+        }
+
+        .feature-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .feature-text p {
+            font-size: 1.05rem;
+            color: var(--text-medium);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            background: var(--primary-lighter);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* ===== PLANT GROUPS ===== */
+        .plant-groups {
+            background: var(--bg-pink);
+        }
+
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+        }
+
+        .group-card {
+            background: var(--bg-white);
+            border-radius: var(--radius);
+            padding: 28px 16px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .group-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .group-emoji {
+            font-size: 2.4rem;
+            margin-bottom: 12px;
+        }
+
+        .group-card h4 {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .group-card p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* ===== ABOUT ===== */
+        .about {
+            background: var(--bg-white);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-content .section-title {
+            margin-bottom: 20px;
+        }
+
+        .about-content p {
+            font-size: 1.05rem;
+            color: var(--text-medium);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .about-values {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .about-value {
+            background: var(--bg-pink);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .about-value-icon {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .about-value h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .about-value p {
+            font-size: 0.85rem;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        .about-image {
+            display: flex;
+            justify-content: center;
+        }
+
+        .about-image .about-logo-display {
+            width: 280px;
+            height: 280px;
+            border-radius: 56px;
+            box-shadow: var(--shadow-lg);
+            object-fit: cover;
+        }
+
+        /* ===== CTA ===== */
+        .cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #fff;
+            text-align: center;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .cta::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .cta .section-title {
+            color: #fff;
+            font-size: 2.6rem;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            margin-bottom: 36px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta .app-store-btn {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== FAQ ===== */
+        .faq {
+            background: var(--bg-off);
+        }
+
+        .faq-list {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(216, 114, 122, 0.15);
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 24px 0;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.4rem;
+            color: var(--primary);
+            font-weight: 400;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+
+        .faq-item.active .faq-question::after {
+            content: '−';
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding-bottom: 24px;
+        }
+
+        .faq-answer p {
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            line-height: 1.7;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--text-dark);
+            color: #fff;
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand {
+            max-width: 300px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+        }
+
+        .footer-brand p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.7;
+        }
+
+        .footer-col h4 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.55);
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--primary-light);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-bottom p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .footer-social a:hover {
+            background: var(--primary);
+        }
+
+        .footer-social svg {
+            width: 16px;
+            height: 16px;
+            fill: #fff;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 2.6rem;
+            }
+
+            .hero-grid {
+                gap: 40px;
+            }
+
+            .groups-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 70px 0;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: #fff;
+                flex-direction: column;
+                padding: 24px;
+                gap: 20px;
+                box-shadow: var(--shadow-md);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .hero {
+                padding: 110px 0 60px;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-desc {
+                margin: 0 auto 32px;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .hero-image img {
+                max-width: 400px;
+            }
+
+            .science-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+                max-width: 360px;
+                margin: 0 auto;
+                gap: 48px;
+            }
+
+            .feature-row,
+            .feature-row.reverse {
+                grid-template-columns: 1fr;
+                direction: ltr;
+                text-align: center;
+            }
+
+            .feature-row.reverse > * {
+                direction: ltr;
+            }
+
+            .feature-img-wrapper {
+                order: -1;
+            }
+
+            .feature-img-wrapper img {
+                max-width: 260px;
+            }
+
+            .feature-tags {
+                justify-content: center;
+            }
+
+            .groups-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .about-values {
+                grid-template-columns: 1fr;
+            }
+
+            .about-image {
+                order: -1;
+            }
+
+            .section-title {
+                font-size: 1.9rem;
+            }
+
+            .cta .section-title {
+                font-size: 2rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .groups-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .group-card {
+                padding: 20px 12px;
+            }
+
+            .feature-img-wrapper img {
+                max-width: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <img src="assets/icon.png" alt="Gutsy logo">
+                Gutsy
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#science">The Science</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="https://apps.apple.com/sa/app/gutsy-one-plant-at-a-time/id6778828464" target="_blank" rel="noopener" class="nav-cta">Download</a></li>
+            </ul>
+            <div class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content fade-in">
+                    <!-- <div class="hero-badge">Born at Apple Developer Academy</div> -->
+                    <h1>Healthier Gut, <span>One Plant</span> at a Time.</h1>
+                    <p class="hero-tagline">Taking the guesswork out of gut health.</p>
+                    <p class="hero-desc">Listen to what's going on deep down inside, and let Gutsy handle the rest. Snap a meal, let AI detect your plants, and watch your microbiome diversity grow.</p>
+                    <div class="hero-actions">
+                        <a href="https://apps.apple.com/sa/app/gutsy-one-plant-at-a-time/id6778828464" target="_blank" rel="noopener" class="app-store-btn">
+                            <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+                        </a>
+                        <!-- <span class="hero-stat">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="currentColor"/><path d="M5 8l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Free &middot; No Subscriptions
+                        </span> -->
+                    </div>
+                </div>
+                <div class="hero-image fade-in">
+                    <img src="assets/hero.png" alt="Gutsy app screenshots showing plant tracking, meal history, and diversity score">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCIENCE -->
+    <section class="science" id="science">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">The Science</span>
+                <h2 class="section-title">Why 30 Plants Per Week?</h2>
+                <p class="section-subtitle">The American Gut Project studied over 10,000 people and found that those who ate 30+ different plants per week had significantly more diverse gut microbiomes.</p>
+            </div>
+            <div class="science-grid">
+                <div class="science-card fade-in">
+                    <div class="science-icon">🦠</div>
+                    <h3>Greater Diversity</h3>
+                    <p>More plant varieties feed more types of gut bacteria, creating a richer, more resilient microbiome ecosystem.</p>
+                </div>
+                <div class="science-card fade-in">
+                    <div class="science-icon">🛡️</div>
+                    <h3>Stronger Immunity</h3>
+                    <p>Over 70% of your immune system lives in your gut. A diverse microbiome means better immune function and disease resistance.</p>
+                </div>
+                <div class="science-card fade-in">
+                    <div class="science-icon">⚡</div>
+                    <h3>Better Digestion</h3>
+                    <p>Different plants provide different fibres that nourish different microbes, improving digestion and nutrient absorption.</p>
+                </div>
+            </div>
+            <p class="science-source fade-in">Based on research from the <a href="https://microsetta.ucsd.edu/american-gut-project/" target="_blank" rel="noopener">American Gut Project</a> (McDonald et al., 2018)</p>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">How It Works</span>
+                <h2 class="section-title">Three Steps to a Healthier Gut</h2>
+                <p class="section-subtitle">Gutsy makes tracking your plant diversity effortless. No manual logging, no calorie counting.</p>
+            </div>
+            <div class="steps">
+                <div class="step fade-in">
+                    <div class="step-number">1</div>
+                    <h3>Snap a Meal</h3>
+                    <p>Take a photo of your food. Gutsy's AI automatically detects every plant-based ingredient on your plate.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">2</div>
+                    <h3>Review &amp; Confirm</h3>
+                    <p>Check the detected ingredients, edit or add anything the AI missed, then confirm your meal entry.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">3</div>
+                    <h3>Watch It Grow</h3>
+                    <p>Your weekly plant count and diversity score update instantly. Track your progress across all 6 plant groups.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Features</span>
+                <h2 class="section-title">Everything You Need for Gut Health</h2>
+                <p class="section-subtitle">Powerful tools wrapped in a simple, delightful experience.</p>
+            </div>
+
+            <!-- Feature 1: AI Detection -->
+            <div class="feature-row fade-in">
+                <div class="feature-img-wrapper">
+                    <img src="assets/camera.png" alt="Gutsy AI camera detecting plant ingredients in a meal">
+                </div>
+                <div class="feature-text">
+                    <span class="section-label">AI-Powered</span>
+                    <h3>Snap a Meal, Detect Every Plant</h3>
+                    <p>Point your camera at any meal and Gutsy's AI instantly identifies the plant-based ingredients. Avocado, cherry, cilantro &mdash; it catches them all. Edit or add anything it missed.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Smart Detection</span>
+                        <span class="feature-tag">Instant Results</span>
+                        <span class="feature-tag">Editable</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2: Dashboard -->
+            <div class="feature-row reverse fade-in">
+                <div class="feature-img-wrapper">
+                    <img src="assets/home.png" alt="Gutsy dashboard showing plants per week and overall diversity score">
+                </div>
+                <div class="feature-text">
+                    <span class="section-label">Your Dashboard</span>
+                    <h3>Know Your Gut at a Glance</h3>
+                    <p>See your weekly plant count out of 30, your overall diversity score, recent meal history, and a full microbiome breakdown by plant group &mdash; all on one screen.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Plants per Week</span>
+                        <span class="feature-tag">Diversity Score</span>
+                        <span class="feature-tag">Microbiome Overview</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3: Meal Analysis -->
+            <div class="feature-row fade-in">
+                <div class="feature-img-wrapper">
+                    <img src="assets/meal_insights.png" alt="Gutsy meal detail showing ingredients, plant groups, and gut health insight">
+                </div>
+                <div class="feature-text">
+                    <span class="section-label">Meal Insights</span>
+                    <h3>Every Meal, Analysed</h3>
+                    <p>Each logged meal comes with an AI-generated gut health insight, a breakdown of detected ingredients, and a chart showing which plant groups are represented.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">AI Insights</span>
+                        <span class="feature-tag">Ingredient Cards</span>
+                        <span class="feature-tag">Group Breakdown</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 4: History -->
+            <div class="feature-row reverse fade-in">
+                <div class="feature-img-wrapper">
+                    <img src="assets/meal_history.png" alt="Gutsy meal history showing photos organized by day with personalized tags">
+                </div>
+                <div class="feature-text">
+                    <span class="section-label">History</span>
+                    <h3>Your Meal History, Your Way</h3>
+                    <p>Every meal is saved with its photo, timestamp, and plant breakdown. Add custom tags like &ldquo;lunch&rdquo;, &ldquo;snacking&rdquo;, or &ldquo;bloating&rdquo; to track patterns and look back at what you've been eating.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Photo History</span>
+                        <span class="feature-tag">Custom Tags</span>
+                        <span class="feature-tag">Day-by-Day View</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 5: Diversity Growth -->
+            <div class="feature-row fade-in">
+                <div class="feature-img-wrapper">
+                    <img src="assets/diversity_scorecard.png" alt="Gutsy diversity increased celebration showing cute microbe characters">
+                </div>
+                <div class="feature-text">
+                    <span class="section-label">Gamified</span>
+                    <h3>Watch It Grow</h3>
+                    <p>Every new plant you add pushes your microbiome diversity score higher. Gutsy celebrates your progress with friendly microbe characters that cheer you on.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Progress Tracking</span>
+                        <span class="feature-tag">Celebrations</span>
+                        <span class="feature-tag">Motivational</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLANT GROUPS -->
+    <section class="plant-groups" id="plant-groups">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">The Super Six</span>
+                <h2 class="section-title">6 Plant Groups, One Healthy Gut</h2>
+                <p class="section-subtitle">Gutsy tracks your diversity across all six plant groups. The more groups you cover, the more diverse your microbiome becomes.</p>
+            </div>
+            <div class="groups-grid fade-in">
+                <div class="group-card">
+                    <div class="group-emoji">🥦</div>
+                    <h4>Vegetables</h4>
+                    <p>Leafy greens, roots, cruciferous</p>
+                </div>
+                <div class="group-card">
+                    <div class="group-emoji">🍎</div>
+                    <h4>Fruits</h4>
+                    <p>Berries, citrus, tropical, stone</p>
+                </div>
+                <div class="group-card">
+                    <div class="group-emoji">🌾</div>
+                    <h4>Wholegrains</h4>
+                    <p>Oats, rice, quinoa, wheat</p>
+                </div>
+                <div class="group-card">
+                    <div class="group-emoji">🫘</div>
+                    <h4>Legumes</h4>
+                    <p>Lentils, chickpeas, beans</p>
+                </div>
+                <div class="group-card">
+                    <div class="group-emoji">🥜</div>
+                    <h4>Nuts &amp; Seeds</h4>
+                    <p>Almonds, chia, flax, walnuts</p>
+                </div>
+                <div class="group-card">
+                    <div class="group-emoji">🌿</div>
+                    <h4>Herbs &amp; Spices</h4>
+                    <p>Cilantro, turmeric, basil, mint</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content fade-in">
+                    <span class="section-label">About Us</span>
+                    <h2 class="section-title">Built by a Team That Cares About Your Gut</h2>
+                    <p>Gutsy was created by a team of five at the <strong>Apple Developer Academy in Riyadh, Saudi Arabia</strong> as our final challenge project. We set out to make gut health simple, visual, and accessible to everyone. There's no overwhelming data, no subscriptions, just a clear path to a healthier microbiome.</p>
+                    <p>We believe that small and consistent choices &mdash; one plant at a time &mdash; can make a real difference. Gutsy is our way of putting the science of gut diversity into everyone's hands.</p>
+                    <div class="about-values">
+                        <div class="about-value">
+                            <div class="about-value-icon">🎯</div>
+                            <h4>Simple by Design</h4>
+                            <p>No complexity, no calorie counting. Just plants.</p>
+                        </div>
+                        <div class="about-value">
+                            <div class="about-value-icon">🔬</div>
+                            <h4>Science-Backed</h4>
+                            <p>Built on the 30-plant research framework.</p>
+                        </div>
+                        <div class="about-value">
+                            <div class="about-value-icon">🔒</div>
+                            <h4>Privacy First</h4>
+                            <p>Your data stays on your device. Always.</p>
+                        </div>
+                        <div class="about-value">
+                            <div class="about-value-icon">💚</div>
+                            <h4>Completely Free</h4>
+                            <p>No subscriptions, no paywalls, no ads.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image fade-in">
+                    <img src="assets/icon.png" alt="Gutsy app icon" class="about-logo-display">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">FAQ</span>
+                <h2 class="section-title">Got Questions?</h2>
+            </div>
+            <div class="faq-list fade-in">
+                <div class="faq-item">
+                    <button class="faq-question">What is the 30-plants-per-week goal?</button>
+                    <div class="faq-answer">
+                        <p>Research from the American Gut Project found that people who eat 30 or more different types of plants per week have significantly more diverse gut microbiomes. This includes vegetables, fruits, wholegrains, legumes, nuts and seeds, and herbs and spices. Gutsy helps you track this effortlessly.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">How does the AI plant detection work?</button>
+                    <div class="faq-answer">
+                        <p>Simply snap a photo of your meal and Gutsy's AI analyses the image to detect the plant-based ingredients. You can then review, edit, or add anything the AI may have missed before confirming the entry.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Is Gutsy really free?</button>
+                    <div class="faq-answer">
+                        <p>Yes! Gutsy is completely free with no subscriptions, no in-app purchases, and no ads. We built this as our final project at the Apple Developer Academy and our goal is to make gut health accessible to everyone.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">What about my privacy?</button>
+                    <div class="faq-answer">
+                        <p>Your privacy is our priority. Gutsy stores all your data locally on your device. Photos and meal data are not uploaded to any external server. You can review our full <a href="https://the-netizen.github.io/Gutsy-Privacy-Policy/" target="_blank" rel="noopener" style="color: var(--primary); text-decoration: underline;">privacy policy here</a>.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Do herbs and spices really count as plants?</button>
+                    <div class="faq-answer">
+                        <p>Absolutely! Herbs and spices are one of the Super Six plant groups. Even small amounts of cilantro, turmeric, basil, or cumin count towards your 30-plant weekly goal and contribute unique beneficial compounds to your gut.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">What is the Overall Diversity Score?</button>
+                    <div class="faq-answer">
+                        <p>Your Diversity Score is calculated each week based on how many unique plants you've eaten and how evenly they're spread across the 6 plant groups. The more variety and balance, the higher your score — and the happier your gut microbes!</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Which devices does Gutsy support?</button>
+                    <div class="faq-answer">
+                        <p>Gutsy is available on iPhone and requires iOS 17.6 or later. </p>
+                            <!-- It's also compatible with Mac (Apple Silicon) and Apple Vision Pro.</p> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="download">
+        <div class="container fade-in">
+            <h2 class="section-title">Ready to Grow Your Gut?</h2>
+            <p>Start tracking your plant diversity today. It's free, private, and takes just seconds per meal.</p>
+            <a href="https://apps.apple.com/sa/app/gutsy-one-plant-at-a-time/id6778828464" target="_blank" rel="noopener" class="app-store-btn">
+                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="assets/icon.png" alt="Gutsy logo">
+                        Gutsy
+                    </div>
+                    <p>Healthier Gut, One Plant at a Time. Built with care at the Apple Developer Academy, Riyadh.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navigate</h4>
+                    <ul>
+                        <li><a href="#science">The Science</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="https://the-netizen.github.io/Gutsy-Privacy-Policy/" target="_blank" rel="noopener">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:gutsyapp.help@gmail.com">gutsyapp.help@gmail.com</a></li>
+                    </ul>
+                    <div class="footer-social">
+                    <!-- Instagram -->
+                    <a href="#" aria-label="Instagram" title="Instagram">
+                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                    <!-- X / Twitter -->
+                    <a href="#" aria-label="X (Twitter)" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <!-- LinkedIn -->
+                    <a href="https://www.linkedin.com/company/gutsy-app/home/" aria-label="LinkedIn" title="LinkedIn">
+                        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                    <!-- TikTok -->
+                    <a href="#" aria-label="TikTok" title="TikTok">
+                        <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                    </a>
+                </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gutseye. All rights reserved.</p>
+               <!-- socials were here before -->
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 10);
+        });
+
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        // Close mobile menu on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.parentElement;
+                const wasActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!wasActive) item.classList.add('active');
+            });
+        });
+
+        // Scroll fade-in animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
